@@ -104,10 +104,6 @@ class MenuManager {
         saveMenu(defaultMenu)
     }
     
-    func getCategoryNames() -> [String] {
-         guard let menu = loadMenu() else { return [] }
-         return menu.categories.map { $0.name }
-     } // sil bu funksiyani
 
     func loadMenu() -> Menu? {
         guard let data = UserDefaults.standard.data(forKey: menuKey),

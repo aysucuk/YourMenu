@@ -44,10 +44,11 @@ class CategoryViewController: UIViewController {
         topCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         topCollectionView.dataSource = self
         topCollectionView.delegate = self
-        view.addSubview(topCollectionView)
-        topCollectionView.translatesAutoresizingMaskIntoConstraints = false
 
+        view.addSubview(topCollectionView)
         view.addSubview(tableView)
+        
+        topCollectionView.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
@@ -55,6 +56,7 @@ class CategoryViewController: UIViewController {
             topCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             topCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             topCollectionView.heightAnchor.constraint(equalToConstant: 60),
+            
 
             tableView.topAnchor.constraint(equalTo: topCollectionView.bottomAnchor, constant: 15),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
@@ -66,17 +68,19 @@ class CategoryViewController: UIViewController {
     private func reloadData() {
         topCollectionView.reloadData()
         if let category = viewModel.categories[safe: viewModel.selectedCategoryIndex] {
-            print("Subcategories: \(category.subcategories?.map {$0.name} ?? [])")
             tableView.items = category.subcategories ?? []
         }
     }
 }
 
-extension CategoryViewController: CategoryTableViewDelegate {
-    func didSelectSubcategory(_ subcategory: Subcategory) {
-        let products = MenuManager.shared.getProductsForSubcategory(subcategoryId: subcategory.id)
-        let productVC = ProductViewController(products: products, title: subcategory.name)
-        navigationController?.pushViewController(productVC, animated: true)
+extension CategoryViewController: GenericTableViewControllerDelegate {
+    func didSelectItem(_ item: Any) {
+        if let subcategory = item as? Subcategory {
+            let products = MenuManager.shared.getProductsForSubcategory(subcategoryId: subcategory.id)
+            let productVC = ProductViewController(products: products, title: subcategory.name)
+         //   navigationController?.pushViewController(productVC, animated: true)
+            self.present(productVC, animated: true)
+        }
     }
 }
 

@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol GenericTableViewControllerDelegate: AnyObject {
+    func didSelectItem(_ item: Any)
+}
+
 class GenericTableViewController<cell: BaseCell<M>, M>: UITableView, UITableViewDelegate, UITableViewDataSource {
+    
+    weak var selectionDelegate: GenericTableViewControllerDelegate?
     
     var subcategoryId: Int?
     
@@ -50,4 +56,9 @@ class GenericTableViewController<cell: BaseCell<M>, M>: UITableView, UITableView
         
         return UITableViewCell()
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+         let selectedItem = items[indexPath.row]
+         selectionDelegate?.didSelectItem(selectedItem)
+     }
 }
