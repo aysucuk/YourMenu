@@ -10,6 +10,14 @@ import UIKit
 
 final class ProductCell: BaseCell<Product> {
     
+    private let containerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 12
+        view.layer.masksToBounds = true
+        return view
+    }()
+    
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 18, weight: .medium)
@@ -49,12 +57,14 @@ final class ProductCell: BaseCell<Product> {
     override func setupView() {
         super.setupView()
         
-        contentView.addSubview(productImageView)
-        contentView.addSubview(nameLabel)
-        contentView.addSubview(descriptionLabel)
-        contentView.addSubview(priceLabel)
-        contentView.addSubview(addToCartButton)
+        contentView.addSubview(containerView)
+        containerView.addSubview(productImageView)
+        containerView.addSubview(nameLabel)
+        containerView.addSubview(descriptionLabel)
+        containerView.addSubview(priceLabel)
+        containerView.addSubview(addToCartButton)
 
+        containerView.translatesAutoresizingMaskIntoConstraints = false
         productImageView.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -63,22 +73,27 @@ final class ProductCell: BaseCell<Product> {
         
         NSLayoutConstraint.activate([
             
+            containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            
             productImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
             productImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            productImageView.widthAnchor.constraint(equalToConstant: 80),
-            productImageView.heightAnchor.constraint(equalToConstant: 80),
+            productImageView.widthAnchor.constraint(equalToConstant: 120),
+            productImageView.heightAnchor.constraint(equalToConstant: 120),
 
             nameLabel.leadingAnchor.constraint(equalTo: productImageView.trailingAnchor, constant: 15),
             nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
             
             descriptionLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-            descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4),
+            descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 6),
             descriptionLabel.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: -50),
 
 
             priceLabel.leadingAnchor.constraint(equalTo: descriptionLabel.leadingAnchor),
-            priceLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 4),
+            priceLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 6),
             priceLabel.trailingAnchor.constraint(equalTo: descriptionLabel.trailingAnchor),
             priceLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -16),
             
