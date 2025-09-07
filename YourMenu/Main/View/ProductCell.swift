@@ -8,7 +8,13 @@
 
 import UIKit
 
+protocol ProductCellDelegate: AnyObject {
+    func productCellDidTapAddToCart(_ cell: ProductCell)
+}
+
 final class ProductCell: BaseCell<Product> {
+    
+    weak var delegate: ProductCellDelegate?
     
     private let containerView: UIView = {
         let view = UIView()
@@ -56,6 +62,8 @@ final class ProductCell: BaseCell<Product> {
     
     override func setupView() {
         super.setupView()
+        
+        addToCartButton.addTarget(self, action: #selector(addToCartTapped), for: .touchUpInside)
         
         contentView.addSubview(containerView)
         containerView.addSubview(productImageView)
@@ -108,8 +116,12 @@ final class ProductCell: BaseCell<Product> {
     override func config(item: Product) {
         nameLabel.text = item.name
         descriptionLabel.text = item.description
-        priceLabel.text = "\(item.price)"
+        priceLabel.text = "\(item.price) ₼"
         productImageView.image = UIImage(named: item.imageName)
 
     }
+    
+    @objc private func addToCartTapped() {
+         delegate?.productCellDidTapAddToCart(self)
+     }
 }

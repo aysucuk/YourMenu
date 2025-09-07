@@ -9,3 +9,4 @@ import Foundation
 
 typealias ProductTableView = GenericTableViewController<ProductCell, Product>
 typealias CategoryTableView = GenericTableViewController<SubcategoryCell, Subcategory>
+typealias CartTableView = GenericTableViewController<CartCell, CartItem>
