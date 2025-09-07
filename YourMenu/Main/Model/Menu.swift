@@ -14,9 +14,6 @@ struct Product: Codable, Hashable {
     let price: Double
     let imageName: String
     let subcategoryId: Int
-
-//    func hash(into hasher: inout Hasher) { hasher.combine(id) }
-//    static func == (lhs: Product, rhs: Product) -> Bool { lhs.id == rhs.id }
 }
 
 struct Subcategory: Codable, Hashable {
@@ -24,9 +21,6 @@ struct Subcategory: Codable, Hashable {
     let name: String
     var products: [Product]?
     var subcategories: [Subcategory]?
-    
-//    func hash(into hasher: inout Hasher) { hasher.combine(id) }
-//    static func == (lhs: Subcategory, rhs: Subcategory) -> Bool { lhs.id == rhs.id }
 }
 
 struct Category: Codable, Hashable {
@@ -34,9 +28,6 @@ struct Category: Codable, Hashable {
     let name: String
     var subcategories: [Subcategory]?
     var products: [Product]?
-    
-//    func hash(into hasher: inout Hasher) { hasher.combine(id) }
-//    static func == (lhs: Category, rhs: Category) -> Bool { lhs.id == rhs.id }
 }
 
 struct Menu: Codable {

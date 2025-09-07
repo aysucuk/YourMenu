@@ -41,7 +41,7 @@ final class ProductCell: BaseCell<Product> {
 
     private let productImageView: UIImageView = {
         let image = UIImageView()
-        image.contentMode = .scaleAspectFill
+        image.contentMode = .scaleAspectFit
         image.clipsToBounds = true
         image.layer.cornerRadius = 8
         return image
@@ -81,7 +81,7 @@ final class ProductCell: BaseCell<Product> {
             productImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
             productImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             productImageView.widthAnchor.constraint(equalToConstant: 120),
-            productImageView.heightAnchor.constraint(equalToConstant: 120),
+            productImageView.heightAnchor.constraint(equalToConstant: 150),
 
             nameLabel.leadingAnchor.constraint(equalTo: productImageView.trailingAnchor, constant: 15),
             nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),

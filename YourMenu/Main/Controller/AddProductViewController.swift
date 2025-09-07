@@ -8,17 +8,18 @@
 
 import UIKit
 
+protocol AddProductViewControllerDelegate: AnyObject {
+    func addProductViewController(_ controller: AddProductViewController, didSave product: Product)
+}
+
 class AddProductViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     var subcategoryId: Int?
-    var onSave: ((Product) -> Void)?
+    weak var delegate: AddProductViewControllerDelegate?
     
     private lazy var viewModel: AddProductViewModelProtocol = {
         let vm = AddProductViewModelImpl()
-        vm.onProductCreated = { [weak self] product in
-            self?.onSave?(product)
-            self?.navigationController?.popViewController(animated: true)
-        }
+        vm.delegate = self 
         return vm
     }()
     
@@ -54,6 +55,10 @@ class AddProductViewController: UIViewController, UITableViewDataSource, UITable
         )
     }
     
+    func saveProduct(_ product: Product) {
+            delegate?.addProductViewController(self, didSave: product)
+        }
+    
     @objc private func saveTapped() {
         guard let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? AddProductCell else {
             return
@@ -83,4 +88,17 @@ class AddProductViewController: UIViewController, UITableViewDataSource, UITable
         return cell
     }
 
+}
+
+extension AddProductViewController: AddProductViewModelDelegate {
+    func productCreated(_ product: Product) {
+        delegate?.addProductViewController(self, didSave: product)
+        navigationController?.popViewController(animated: true)
+    }
+    
+    func validationError(_ message: String) {
+        if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? AddProductCell {
+            cell.showError(message: message)
+        }
+    }
 }

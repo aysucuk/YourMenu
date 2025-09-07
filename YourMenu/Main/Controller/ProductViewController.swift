@@ -8,8 +8,8 @@
 
 import UIKit
 
-class ProductViewController: UIViewController {
-    
+class ProductViewController: UIViewController, AddProductViewControllerDelegate {
+   
     internal var tableView: ProductTableView = {
        let view = ProductTableView()
         return view
@@ -93,21 +93,15 @@ class ProductViewController: UIViewController {
         
         let addVC = AddProductViewController()
         addVC.subcategoryId = subcategoryId
-        
-        addVC.onSave = { [weak self] newProduct in
-            guard let self = self else { return }
-            
-            MenuManager.shared.addProduct(newProduct, to: subcategoryId)
-            
-            let updatedProducts = MenuManager.shared.getProductsForSubcategory(subcategoryId: subcategoryId)
-            
-            self.tableView.createData(items: updatedProducts)
-
-        }
+        addVC.delegate = self
         
         navigationController?.pushViewController(addVC, animated: true)
-
     }
-
-
+    
+    func addProductViewController(_ controller: AddProductViewController, didSave product: Product) {
+        guard let subId = self.subcategoryId else { return }
+        MenuManager.shared.addProduct(product, to: subId)
+        let updatedProducts = MenuManager.shared.getProductsForSubcategory(subcategoryId: subId)
+        tableView.createData(items: updatedProducts)
+    }
 }

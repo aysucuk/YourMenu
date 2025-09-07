@@ -39,8 +39,17 @@ final class AddProductCell: UITableViewCell {
         return field
     }()
     
+    private let errorLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .systemRed
+        label.font = .systemFont(ofSize: 12)
+        label.text = "Keçərli rəqəm yazın"
+        label.alpha = 0 
+        return label
+    }()
+    
     private lazy var stackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [nameField, descriptionField, priceField])
+        let stack = UIStackView(arrangedSubviews: [nameField, descriptionField, priceField, errorLabel])
         stack.axis = .vertical
         stack.spacing = 12
         return stack
@@ -76,6 +85,21 @@ final class AddProductCell: UITableViewCell {
             stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
         ])
         
+    }
+    
+    func showError(message: String) {
+        errorLabel.text = message
+        errorLabel.isHidden = false
+        UIView.animate(withDuration: 0.25) {
+            self.errorLabel.alpha = 1
+        }
+    }
+    
+    func hideError() {
+        errorLabel.isHidden = true
+        UIView.animate(withDuration: 0.25) {
+            self.errorLabel.alpha = 0
+        }
     }
     
     var nameText: String? { nameField.text }
