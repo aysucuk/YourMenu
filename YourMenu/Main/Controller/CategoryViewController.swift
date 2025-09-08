@@ -78,11 +78,11 @@ extension CategoryViewController: GenericTableViewControllerDelegate {
         if let subcategory = item as? Subcategory {
             let products = MenuManager.shared.getProductsForSubcategory(subcategoryId: subcategory.id)
             let productVC = ProductViewController(products: products, title: subcategory.name)
-         //   navigationController?.pushViewController(productVC, animated: true)
+            navigationController?.pushViewController(productVC, animated: true)
             productVC.subcategoryId = subcategory.id
-            let navVC = UINavigationController(rootViewController: productVC)
-            navVC.modalPresentationStyle = .fullScreen
-            self.present(navVC, animated: true)
+//            let navVC = UINavigationController(rootViewController: productVC)
+//            navVC.modalPresentationStyle = .fullScreen
+//            self.present(navVC, animated: true)
         }
     }
 }

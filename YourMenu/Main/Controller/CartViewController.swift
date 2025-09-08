@@ -37,6 +37,7 @@ class CartViewController: UIViewController, CartViewModelDelegate {
         
         view.backgroundColor = .white
         view.addSubview(tableView)
+        view.addSubview(totalPriceLabel)
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -44,7 +45,7 @@ class CartViewController: UIViewController, CartViewModelDelegate {
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
     

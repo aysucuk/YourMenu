@@ -50,12 +50,6 @@ class ProductViewController: UIViewController, AddProductViewControllerDelegate,
             target: self,
             action: #selector(addNewProduct)
         )
-        navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "chevron.left"),
-            style: .plain,
-            target: self,
-            action: #selector(closeTapped)
-        )
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -108,10 +102,6 @@ class ProductViewController: UIViewController, AddProductViewControllerDelegate,
         openCart()
     }
 
-    
-    @objc private func closeTapped() {
-        self.dismiss(animated: true)
-    }
     
     @objc private func addNewProduct() {
         guard let subcategoryId = self.subcategoryId else { return }
