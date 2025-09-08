@@ -27,10 +27,10 @@ class CategoryViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
         title = "Menyu"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
+        view.backgroundColor = .systemBackground
 
         tableView.selectionDelegate = self
         setupUI()

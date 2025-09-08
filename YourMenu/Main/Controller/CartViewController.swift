@@ -50,6 +50,7 @@ class CartViewController: UIViewController, CartViewModelDelegate {
     
     func cartDidUpdate(_ viewModel: any CartViewModelProtocol) {
         tableView.reloadData()
+        tableView.createData(items: viewModel.items)
         updateTotalPrice()
     }
     

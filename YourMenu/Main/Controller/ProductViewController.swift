@@ -39,6 +39,8 @@ class ProductViewController: UIViewController, AddProductViewControllerDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
         cartButton.delegate = self
+        CartManager.shared.delegate = self
+        tableView.cellDelegate = self
         
         setupUI()
         setupData()
@@ -157,3 +159,4 @@ extension ProductViewController: CartManagerDelegate {
         updateCartBadge()
     }
 }
+
