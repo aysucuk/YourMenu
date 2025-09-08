@@ -9,41 +9,37 @@
 import UIKit
 
 class ProductViewController: UIViewController, AddProductViewControllerDelegate, CartButtonDelegate {
-
-    internal var tableView: ProductTableView = {
-       let view = ProductTableView()
-        return view
+    
+    private let tableView = ProductTableView()
+    private let cartButton = CartButton()
+    private let showCartButton: Bool
+    
+    private lazy var viewModel: ProductViewModelProtocol = {
+        let vm = ProductViewModelImpl()
+        vm.delegate = self
+        return vm
     }()
     
+    var subcategoryId: Int?
     weak var productDelegate: ProductCellDelegate?
     
-    private var products: [Product]
-    var subcategoryId: Int?
-    private let cartButton = CartButton()
-    internal let showCartButton: Bool
-
-    init(products: [Product],
-         title: String,
-         showCartButton: Bool = true) {
-        self.products = products
+    init(showCartButton: Bool = true) {
         self.showCartButton = showCartButton
         super.init(nibName: nil, bundle: nil)
-        self.title = title
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        cartButton.delegate = self
-        CartManager.shared.delegate = self
-        tableView.cellDelegate = self
         
         setupUI()
-        setupData()
+        tableView.cellDelegate = self
+        cartButton.delegate = self
+        
+        viewModel.loadProducts(subcategoryId: subcategoryId)
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .add,
@@ -52,21 +48,7 @@ class ProductViewController: UIViewController, AddProductViewControllerDelegate,
         )
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        if let subId = self.subcategoryId {
-            let updatedProducts = MenuManager.shared.getProductsForSubcategory(subcategoryId: subId)
-            reloadData(updatedProducts)
-        } else {
-            reloadData(products)
-        }
-        updateCartBadge()
-    }
-
-    
     private func setupUI() {
-        
         view.backgroundColor = .white
         view.addSubview(tableView)
         view.addSubview(cartButton)
@@ -75,7 +57,7 @@ class ProductViewController: UIViewController, AddProductViewControllerDelegate,
         cartButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20), 
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -87,66 +69,43 @@ class ProductViewController: UIViewController, AddProductViewControllerDelegate,
         ])
     }
     
-    
-    
-    private func setupData() {
-        tableView.createData(items: products)
-    }
-    
-    func reloadData(_ products: [Product]) {
-            self.products = products
-            tableView.reloadData()
-        }
-    
     func cartButtonDidTap(_ cartButton: CartButton) {
-        openCart()
-    }
-
-    
-    @objc private func addNewProduct() {
-        guard let subcategoryId = self.subcategoryId else { return }
-        
-        let addVC = AddProductViewController()
-        addVC.subcategoryId = subcategoryId
-        addVC.delegate = self
-        
-        navigationController?.pushViewController(addVC, animated: true)
-    }
-    
-    @objc private func openCart() {
         let cartVC = CartViewController()
         navigationController?.pushViewController(cartVC, animated: true)
     }
     
-    @objc private func updateCartBadge() {
-        guard showCartButton else {
-            cartButton.isHidden = true
-            return
-        }
-        let count = CartManager.shared.items.reduce(0) { $0 + $1.quantity }
-        cartButton.updateBadge(count)
+    @objc private func addNewProduct() {
+        guard let subcategoryId = self.subcategoryId else { return }
+        let addVC = AddProductViewController()
+        addVC.subcategoryId = subcategoryId
+        addVC.delegate = self
+        navigationController?.pushViewController(addVC, animated: true)
     }
     
     func addProductViewController(_ controller: AddProductViewController, didSave product: Product) {
         guard let subId = self.subcategoryId else { return }
-        MenuManager.shared.addProduct(product, to: subId)
-        let updatedProducts = MenuManager.shared.getProductsForSubcategory(subcategoryId: subId)
-        tableView.createData(items: updatedProducts)
+        viewModel.addProduct(product, to: subId)
     }
 }
 
 extension ProductViewController: ProductCellDelegate {
     func productCellDidTapAddToCart(_ cell: ProductCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
-        let product = products[indexPath.row]
-        CartManager.shared.add(product)
-        updateCartBadge()
+        let product = viewModel.products[indexPath.row]
+        viewModel.addToCart(product)
     }
 }
 
-extension ProductViewController: CartManagerDelegate {
-    func cartDidUpdate(_ manager: CartManager) {
-        updateCartBadge()
+extension ProductViewController: ProductViewModelDelegate {
+    func productViewModel(_ viewModel: ProductViewModelProtocol, didUpdateProducts products: [Product]) {
+        tableView.createData(items: products)
+    }
+    
+    func productViewModel(_ viewModel: ProductViewModelProtocol, didUpdateCart count: Int) {
+        guard showCartButton else {
+            cartButton.isHidden = true
+            return
+        }
+        cartButton.updateBadge(count)
     }
 }
-

@@ -24,21 +24,22 @@ class CartViewModelImpl: CartViewModelProtocol {
     
     private(set) var items: [CartItem] = []
     weak var delegate: CartViewModelDelegate?
+    private let manager: CartManager = .shared
     
     func loadCart() {
-        items = CartManager.shared.items
+        items = manager.items
         delegate?.cartDidUpdate(self)
     }
     
     func addToCart(_ product: Product) {
-        CartManager.shared.add(product)
-        items = CartManager.shared.items
+        manager.add(product)
+        items = manager.items
         delegate?.cartDidUpdate(self)
     }
     
     func removeFromCart(_ product: Product) {
-        CartManager.shared.remove(product)
-        items = CartManager.shared.items
+        manager.remove(product)
+        items = manager.items
         delegate?.cartDidUpdate(self)
     }
 }

@@ -50,9 +50,9 @@ final class CartCell: BaseCell<CartItem> {
 
             countLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             countLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            countLabel.widthAnchor.constraint(equalToConstant: 40),
+            countLabel.widthAnchor.constraint(equalToConstant: 20),
 
-            subtotalPriceLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            subtotalPriceLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             subtotalPriceLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
                ])
     }

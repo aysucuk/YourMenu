@@ -24,6 +24,7 @@ class CategoryViewController: UIViewController {
     }()
 
     private var tableView = CategoryTableView()
+    private let manager: MenuManager = .shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +36,7 @@ class CategoryViewController: UIViewController {
         tableView.selectionDelegate = self
         setupUI()
 
-        MenuManager.shared.initializeDefaultMenuIfNeeded()
+        manager.initializeDefaultMenuIfNeeded()
         viewModel.loadMenu()
     }
 
@@ -76,16 +77,14 @@ class CategoryViewController: UIViewController {
 extension CategoryViewController: GenericTableViewControllerDelegate {
     func didSelectItem(_ item: Any) {
         if let subcategory = item as? Subcategory {
-            let products = MenuManager.shared.getProductsForSubcategory(subcategoryId: subcategory.id)
-            let productVC = ProductViewController(products: products, title: subcategory.name)
-            navigationController?.pushViewController(productVC, animated: true)
+            let productVC = ProductViewController()
+            productVC.title = subcategory.name
             productVC.subcategoryId = subcategory.id
-//            let navVC = UINavigationController(rootViewController: productVC)
-//            navVC.modalPresentationStyle = .fullScreen
-//            self.present(navVC, animated: true)
+            navigationController?.pushViewController(productVC, animated: true)
         }
     }
 }
+
 
 extension CategoryViewController: CategoryViewModelDelegate {
     func didLoadMenu() { reloadData() }
